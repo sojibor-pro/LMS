@@ -235,7 +235,8 @@ export const MOCK_COURSES: Course[] = [
             id: 'lsn_101',
             title: 'Cardiac Cycle, Heart Sounds & JVP Dynamics',
             duration: '45 mins',
-            videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ', // Embed placeholder
+            type: 'video',
+            videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
             isFreePreview: true,
             summary: `### Core High-Yield Topics:
 1. **Cardiac Cycle Phases**: Isovolumetric contraction, Rapid ejection, Isovolumetric relaxation, Rapid ventricular filling.
@@ -261,6 +262,7 @@ export const MOCK_COURSES: Course[] = [
             id: 'lsn_102',
             title: 'Ischemic Heart Disease (IHD) & ECG Masterclass',
             duration: '55 mins',
+            type: 'video',
             videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
             summary: `### ECG Interpretation Rules for Exams:
 1. **ST Elevation**: STEMI (>1mm in limb leads, >2mm in chest leads V2-V3).
@@ -276,6 +278,152 @@ export const MOCK_COURSES: Course[] = [
 - Hypokalemia: U waves, flattened T waves, ST depression.
 - Digoxin Toxicity: Reverse tick ST depression, AV block with PAT.`
             }
+          },
+          {
+            id: 'lsn_103',
+            title: 'LIVE CLASS: Live Doubt Solving & Viva Preparation',
+            duration: '60 mins',
+            type: 'live_class',
+            summary: 'Interactive Live Class with Prof. Dr. M. A. Jalil covering tricky FCPS Part-1 Cardiology MCQs and Viva scenarios.',
+            liveClassDetails: {
+              scheduledAt: 'Tonight at 8:00 PM BDT',
+              instructorName: 'Prof. Dr. M. A. Jalil',
+              platform: 'Zoom',
+              meetingId: '984-2110-4491',
+              isLiveNow: true,
+              attendeesCount: 342,
+              streamUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+            }
+          },
+          {
+            id: 'lsn_104',
+            title: 'Genesis Cardiology High-Yield PDF Study Sheet',
+            duration: '15 mins',
+            type: 'pdf',
+            pdfUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+            summary: 'Downloadable official Genesis PDF notes for FCPS Part-1 Cardiology. Contains high-yield charts, tables, and memory mnemonics.',
+            lectureSheet: {
+              id: 'sheet_pdf_cardio',
+              title: 'Cardiology Genesis Master Handout PDF',
+              downloadUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+              contentMarkdown: '# High Yield Cardiology Notes PDF\n- Complete JVP & Heart Sounds Guide\n- ECG High-Yield Strip Analysis\n- Valvular Heart Disease Summaries'
+            }
+          },
+          {
+            id: 'lsn_105',
+            title: 'PowerPoint Slide Deck: Valvular Heart Disease Presentation',
+            duration: '25 mins',
+            type: 'ppt',
+            summary: 'Interactive Slide Presentation detailing Mitral Stenosis, Aortic Regurgitation, and Echocardiographic diagnostic criteria.',
+            pptSlides: [
+              {
+                slideNumber: 1,
+                title: 'Valvular Heart Disease - Overview & Etiology',
+                content: [
+                  'Rheumatic Heart Disease remains #1 cause of Mitral Stenosis in South Asia.',
+                  'Aortic Stenosis: Congenital Bicuspid Aortic Valve vs Senile Calcific Stenosis.',
+                  'Infective Endocarditis: Staph aureus (IV drug users) vs Viridans Streptococci (native valves).'
+                ],
+                notes: 'Focus on Mitral Facies and Malar Flush in MS for viva.'
+              },
+              {
+                slideNumber: 2,
+                title: 'Aortic Stenosis Classical Triad',
+                content: [
+                  '1. Angina (Exertional myocardial ischemia)',
+                  '2. Syncope (Exertional cerebral hypoperfusion)',
+                  '3. Heart Failure (Dyspnea on exertion, orthopnea)',
+                  'Physical Exam: Slow rising pulse (pulsus parvus et tardus), Narrow pulse pressure, Ejection Systolic Murmur.'
+                ],
+                notes: 'Remember SAD mnemonic: Syncope, Angina, Dyspnea.'
+              },
+              {
+                slideNumber: 3,
+                title: 'Echocardiography High-Yield Parameters',
+                content: [
+                  'Severe Aortic Stenosis: Valve area <1.0 cm², Mean gradient >40 mmHg.',
+                  'Severe Mitral Stenosis: Valve area <1.0 cm², Mean gradient >10 mmHg.',
+                  'Severe Mitral Regurgitation: Regurgitant volume >60 mL, Vena contracta >0.7 cm.'
+                ],
+                notes: 'Transthoracic vs Transesophageal echo indications.'
+              }
+            ]
+          },
+          {
+            id: 'lsn_106',
+            title: 'Audio Revision Podcast: Cardiology Ward Duty High-Yields',
+            duration: '18 mins',
+            type: 'audio',
+            audioUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+            summary: '18-minute quick audio podcast summary designed for listening while walking ward rounds or commuting. High-yield BCPS exam facts on cardiac drugs and arrhythmia protocols.'
+          },
+          {
+            id: 'lsn_107',
+            title: 'Recorded Class Archive: Complete Acute Coronary Syndrome Session',
+            duration: '90 mins',
+            type: 'recorded_class',
+            videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+            summary: 'Archived HD recorded class from the July 2026 Batch. Includes full Q&A segment and detailed ECG breakdown.'
+          },
+          {
+            id: 'lsn_108',
+            title: 'Clinical Assignment: STEMI Patient Management Protocol',
+            duration: '45 mins',
+            type: 'assignment',
+            summary: 'Written clinical case assignment on diagnosing and managing an acute STEMI patient in the emergency room.',
+            assignmentDetails: {
+              caseTitle: 'Case Study: 52-Year-Old Male presenting with crushing retrosternal chest pain radiating to jaw.',
+              instructions: 'Write out a 400-500 word emergency management plan detailing MONA/TASC protocol, Streptokinase thrombolysis contraindications, and PCI referral guidelines.',
+              dueDate: 'In 3 Days (August 9, 2026)',
+              maxMarks: 100,
+              submitted: true,
+              submissionText: 'Patient was given Oxygen, Aspirin 300mg, Clopidogrel 300mg, and Morphine 5mg IV with Metoclopramide. ECG confirmed Anterior Wall STEMI. Thrombolysed with Streptokinase 1.5 million units IV over 60 mins.',
+              submittedAt: 'Yesterday at 4:30 PM',
+              grade: 94,
+              feedback: 'Excellent breakdown of thrombolytic contraindications! Good mention of RV infarction precautions.',
+              status: 'Graded'
+            }
+          },
+          {
+            id: 'lsn_109',
+            title: 'Module 1 Quick Assessment Quiz',
+            duration: '15 mins',
+            type: 'quiz',
+            summary: '5 High-Yield SBA Questions testing your understanding of Module 1 Cardiovascular concepts before proceeding.',
+            quizQuestions: [
+              {
+                id: 'qz_1',
+                text: 'A 45-year-old female presents with dyspnea. JVP examination shows prominent giant "a" waves. Which condition is most likely?',
+                type: 'sba',
+                options: [
+                  'Atrial Fibrillation',
+                  'Tricuspid Stenosis',
+                  'Tricuspid Regurgitation',
+                  'Mitral Stenosis',
+                  'Constrictive Pericarditis'
+                ],
+                correctAnswer: 1,
+                explanation: 'Giant "a" waves occur when the atrium contracts against a resistant or obstructed tricuspid valve (Tricuspid Stenosis) or non-compliant right ventricle (Pulmonary HTN). In Atrial Fibrillation, "a" waves are completely absent.',
+                difficulty: 'Medium',
+                topic: 'JVP Waves'
+              },
+              {
+                id: 'qz_2',
+                text: 'Which ECG lead combination represents an Inferior Wall Myocardial Infarction?',
+                type: 'sba',
+                options: [
+                  'V1 to V4',
+                  'I, aVL, V5, V6',
+                  'II, III, aVF',
+                  'V1, V2 only',
+                  'V7 to V9'
+                ],
+                correctAnswer: 2,
+                explanation: 'Inferior wall MI is indicated by ST elevation in leads II, III, and aVF, usually supplied by the Right Coronary Artery (RCA).',
+                difficulty: 'Easy',
+                topic: 'ECG Interpretation'
+              }
+            ]
           }
         ]
       },

@@ -60,7 +60,7 @@ export const ExamsView: React.FC<ExamsViewProps> = ({ onStartExam, onOpenPlanMod
       negativeMarkPerWrong: 0.25,
       passPercentage: 70,
       questions: selectedQuestions,
-      planRequired: 'Free',
+      planRequired: 'free',
       totalAttempts: 340,
     };
 
@@ -100,7 +100,7 @@ export const ExamsView: React.FC<ExamsViewProps> = ({ onStartExam, onOpenPlanMod
       negativeMarkPerWrong: customNegativeMark,
       passPercentage: 70,
       questions: finalQuestions,
-      planRequired: 'Free',
+      planRequired: 'free',
       subject: customSubject,
       topic: customTopic,
       isCustom: true,

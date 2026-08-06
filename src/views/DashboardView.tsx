@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLMS } from '../context/LMSContext';
+import { Course, Lesson } from '../types';
 import {
   Award,
   BarChart3,
@@ -12,10 +13,25 @@ import {
   ShieldCheck,
   Download,
   AlertTriangle,
-  TrendingUp
+  TrendingUp,
+  PlayCircle,
+  ArrowRight,
+  Play
 } from 'lucide-react';
 
-export const DashboardView: React.FC = () => {
+interface DashboardViewProps {
+  onSelectCourse?: (course: Course) => void;
+  onStartLesson?: (course: Course, lesson: Lesson) => void;
+  onNavigateToLearning?: () => void;
+  onNavigateToHome?: () => void;
+}
+
+export const DashboardView: React.FC<DashboardViewProps> = ({
+  onSelectCourse,
+  onStartLesson,
+  onNavigateToLearning,
+  onNavigateToHome,
+}) => {
   const { user } = useAuth();
   const { courses, submissions } = useLMS();
   const [showCertificate, setShowCertificate] = useState(false);
@@ -96,35 +112,114 @@ export const DashboardView: React.FC = () => {
 
       {/* Main Grid Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Enrolled Courses Progress */}
+        {/* Enrolled Courses Progress & Resume Buttons */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-emerald-400" /> Enrolled Course Progress
-          </h2>
+          <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-emerald-400" /> Enrolled & Purchased Courses
+            </h2>
+            {onNavigateToLearning && (
+              <button
+                onClick={onNavigateToLearning}
+                className="text-xs text-emerald-400 font-semibold hover:underline flex items-center gap-1"
+              >
+                All Modules <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
 
           <div className="space-y-4">
-            {enrolledCourses.map((c) => {
-              const totalLessons = c.modules.reduce((acc, m) => acc + m.lessons.length, 0);
-              const completedLessonsInCourse = c.modules
-                .flatMap((m) => m.lessons)
-                .filter((l) => user.completedLessonIds.includes(l.id)).length;
-              const pct = totalLessons > 0 ? Math.round((completedLessonsInCourse / totalLessons) * 100) : 0;
+            {enrolledCourses.length > 0 ? (
+              enrolledCourses.map((c) => {
+                const allLessonsInCourse = c.modules.flatMap((m) => m.lessons);
+                const totalLessons = allLessonsInCourse.length;
+                const completedLessonsInCourse = allLessonsInCourse.filter((l) =>
+                  user.completedLessonIds.includes(l.id)
+                ).length;
+                const pct = totalLessons > 0 ? Math.round((completedLessonsInCourse / totalLessons) * 100) : 0;
 
-              return (
-                <div key={c.id} className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/60 space-y-2">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="font-bold text-white truncate max-w-xs">{c.title}</span>
-                    <span className="font-bold text-emerald-400">{pct}%</span>
+                // Find next incomplete lesson
+                const nextIncompleteLesson =
+                  allLessonsInCourse.find((l) => !user.completedLessonIds.includes(l.id)) ||
+                  allLessonsInCourse[0];
+
+                return (
+                  <div
+                    key={c.id}
+                    className="p-4 rounded-xl bg-slate-950/80 border border-slate-800 space-y-3 hover:border-emerald-500/40 transition shadow-lg"
+                  >
+                    <div className="flex items-start gap-3">
+                      <img
+                        src={c.thumbnail}
+                        alt={c.title}
+                        className="w-14 h-14 rounded-xl object-cover border border-slate-800 shrink-0"
+                        referrerPolicy="no-referrer"
+                      />
+                      <div className="flex-1 overflow-hidden">
+                        <div className="flex justify-between items-center text-xs mb-1">
+                          <span className="font-bold text-white truncate max-w-[220px] sm:max-w-xs">{c.title}</span>
+                          <span className="font-extrabold text-emerald-400">{pct}%</span>
+                        </div>
+
+                        <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden mb-1.5">
+                          <div
+                            className="bg-emerald-500 h-full rounded-full transition-all duration-500"
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+
+                        <p className="text-[11px] text-slate-400">
+                          {completedLessonsInCourse} of {totalLessons} lessons finished
+                        </p>
+                      </div>
+                    </div>
+
+                    {nextIncompleteLesson && (
+                      <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800/80 flex items-center justify-between gap-2 text-xs">
+                        <div className="truncate text-slate-300">
+                          <span className="text-slate-500 text-[10px] font-mono uppercase block">Up Next</span>
+                          <span className="font-bold text-emerald-300 truncate">{nextIncompleteLesson.title}</span>
+                        </div>
+
+                        <div className="flex items-center gap-2 shrink-0">
+                          {onStartLesson && (
+                            <button
+                              onClick={() => onStartLesson(c, nextIncompleteLesson)}
+                              className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1.5"
+                            >
+                              <PlayCircle className="w-3.5 h-3.5" />
+                              {pct === 100 ? 'Revisit' : 'Continue'}
+                            </button>
+                          )}
+
+                          {onSelectCourse && (
+                            <button
+                              onClick={() => onSelectCourse(c)}
+                              className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition"
+                            >
+                              Curriculum
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                    <div className="bg-emerald-500 h-full rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
-                  </div>
-                  <p className="text-[11px] text-slate-400">
-                    {completedLessonsInCourse} of {totalLessons} lessons finished
-                  </p>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <div className="p-6 rounded-xl bg-slate-950/60 border border-slate-800 text-center space-y-3">
+                <BookOpen className="w-8 h-8 text-slate-600 mx-auto" />
+                <p className="text-xs text-slate-400">You haven't enrolled in any batch or course yet.</p>
+                {onNavigateToHome && (
+                  <button
+                    onClick={onNavigateToHome}
+                    className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition"
+                  >
+                    Browse All Medical Batches
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

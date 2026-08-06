@@ -14,7 +14,9 @@ import {
   Menu,
   X,
   Stethoscope,
-  Layers
+  Layers,
+  TrendingUp,
+  Bot
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -141,6 +143,42 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           <button
+            onClick={() => setCurrentTab('learning')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 ${
+              currentTab === 'learning'
+                ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30'
+                : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            Learning Modules
+          </button>
+
+          <button
+            onClick={() => setCurrentTab('ai')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 ${
+              currentTab === 'ai'
+                ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30'
+                : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+            }`}
+          >
+            <Bot className="w-4 h-4 text-emerald-400" />
+            AI Assistant
+          </button>
+
+          <button
+            onClick={() => setCurrentTab('subscription')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 ${
+              currentTab === 'subscription'
+                ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30'
+                : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+            }`}
+          >
+            <Crown className="w-4 h-4 text-amber-400" />
+            Subscription
+          </button>
+
+          <button
             onClick={() => setCurrentTab('qbank')}
             className={`px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 ${
               currentTab === 'qbank'
@@ -162,6 +200,30 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <FileCheck2 className="w-4 h-4" />
             Exam Hall
+          </button>
+
+          <button
+            onClick={() => setCurrentTab('analytics')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 ${
+              currentTab === 'analytics'
+                ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30'
+                : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+            }`}
+          >
+            <TrendingUp className="w-4 h-4 text-emerald-400" />
+            Analytics
+          </button>
+
+          <button
+            onClick={() => setCurrentTab('security')}
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-1.5 ${
+              currentTab === 'security'
+                ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
+                : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+            }`}
+          >
+            <Bell className="w-4 h-4 text-indigo-400" />
+            Security & Alerts
           </button>
 
           <button
@@ -243,12 +305,30 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
           <button
             onClick={() => {
+              setCurrentTab('learning');
+              setMobileMenuOpen(false);
+            }}
+            className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800 flex items-center gap-2"
+          >
+            <Sparkles className="w-4 h-4 text-amber-400" /> Learning Modules (9 Formats)
+          </button>
+          <button
+            onClick={() => {
               setCurrentTab('exams');
               setMobileMenuOpen(false);
             }}
             className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800 flex items-center gap-2"
           >
             <FileCheck2 className="w-4 h-4" /> Exam Hall & Practice
+          </button>
+          <button
+            onClick={() => {
+              setCurrentTab('analytics');
+              setMobileMenuOpen(false);
+            }}
+            className="w-full text-left px-3 py-2 rounded-lg text-sm text-slate-200 hover:bg-slate-800 flex items-center gap-2"
+          >
+            <TrendingUp className="w-4 h-4 text-emerald-400" /> Exam & Study Analytics
           </button>
           <button
             onClick={() => {

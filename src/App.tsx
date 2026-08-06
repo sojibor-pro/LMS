@@ -15,6 +15,11 @@ import { DoctorDashboardView } from './views/DoctorDashboardView';
 import { InstructorDashboardView } from './views/InstructorDashboardView';
 import { AdminView } from './views/AdminView';
 import { QuestionBankView } from './views/QuestionBankView';
+import { LearningModulesView } from './views/LearningModulesView';
+import { AnalyticsView } from './views/AnalyticsView';
+import { AIFeaturesView } from './views/AIFeaturesView';
+import { SubscriptionView } from './views/SubscriptionView';
+import { NotificationsSecurityView } from './views/NotificationsSecurityView';
 import { Course, Lesson, Exam } from './types';
 
 function MainApp() {
@@ -84,6 +89,16 @@ function MainApp() {
                   />
                 )}
 
+                {currentTab === 'learning' && (
+                  <LearningModulesView
+                    onStartLesson={(course, lesson) => {
+                      setSelectedCourse(course);
+                      setSelectedLesson(lesson);
+                    }}
+                    onOpenPlanModal={() => setPlanModalOpen(true)}
+                  />
+                )}
+
                 {currentTab === 'qbank' && (
                   <QuestionBankView onOpenPlanModal={() => setPlanModalOpen(true)} />
                 )}
@@ -95,12 +110,45 @@ function MainApp() {
                   />
                 )}
 
+                {currentTab === 'analytics' && (
+                  <AnalyticsView
+                    onNavigateToQBank={() => setCurrentTab('qbank')}
+                    onNavigateToExams={() => setCurrentTab('exams')}
+                  />
+                )}
+
+                {currentTab === 'ai' && (
+                  <AIFeaturesView onNavigateToQBank={() => setCurrentTab('qbank')} />
+                )}
+
+                {currentTab === 'subscription' && <SubscriptionView />}
+
+                {currentTab === 'security' && <NotificationsSecurityView />}
+
                 {currentTab === 'dashboard' && (
                   <>
-                    {user.role === 'doctor' && <DoctorDashboardView />}
+                    {user.role === 'doctor' && (
+                      <DoctorDashboardView
+                        onSelectCourse={handleSelectCourse}
+                        onStartLesson={(course, lesson) => {
+                          setSelectedCourse(course);
+                          setSelectedLesson(lesson);
+                        }}
+                      />
+                    )}
                     {user.role === 'instructor' && <InstructorDashboardView />}
                     {user.role === 'admin' && <AdminView />}
-                    {user.role === 'student' && <DashboardView />}
+                    {user.role === 'student' && (
+                      <DashboardView
+                        onSelectCourse={handleSelectCourse}
+                        onStartLesson={(course, lesson) => {
+                          setSelectedCourse(course);
+                          setSelectedLesson(lesson);
+                        }}
+                        onNavigateToLearning={() => setCurrentTab('learning')}
+                        onNavigateToHome={() => setCurrentTab('home')}
+                      />
+                    )}
                   </>
                 )}
 

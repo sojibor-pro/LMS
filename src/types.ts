@@ -66,14 +66,76 @@ export interface LectureSheet {
   contentMarkdown: string;
 }
 
+export type LessonType = 
+  | 'video' 
+  | 'pdf' 
+  | 'ppt' 
+  | 'audio' 
+  | 'live_class' 
+  | 'recorded_class' 
+  | 'assignment' 
+  | 'quiz';
+
+export interface PPTSlide {
+  slideNumber: number;
+  title: string;
+  content: string[];
+  notes?: string;
+  imageUrl?: string;
+}
+
+export interface LiveClassDetails {
+  scheduledAt: string;
+  instructorName: string;
+  platform: 'Zoom' | 'Genesis WebRTC Stream' | 'YouTube Live';
+  meetingId: string;
+  isLiveNow?: boolean;
+  streamUrl?: string;
+  attendeesCount?: number;
+}
+
+export interface AssignmentDetails {
+  caseTitle: string;
+  instructions: string;
+  dueDate: string;
+  maxMarks: number;
+  submitted?: boolean;
+  submissionText?: string;
+  submissionFileName?: string;
+  submittedAt?: string;
+  grade?: number;
+  feedback?: string;
+  status?: 'Pending' | 'Under Review' | 'Graded';
+}
+
 export interface Lesson {
   id: string;
   title: string;
   duration: string; // e.g. "45 mins"
-  videoUrl: string;
+  type?: LessonType;
+  videoUrl?: string;
+  audioUrl?: string;
+  pdfUrl?: string;
   summary: string;
   lectureSheet?: LectureSheet;
   isFreePreview?: boolean;
+  pptSlides?: PPTSlide[];
+  liveClassDetails?: LiveClassDetails;
+  assignmentDetails?: AssignmentDetails;
+  quizQuestions?: Question[];
+}
+
+export interface Certificate {
+  id: string;
+  courseId: string;
+  courseTitle: string;
+  studentName: string;
+  studentId: string;
+  issueDate: string;
+  verificationCode: string;
+  instructorName: string;
+  bmdcRegNumber?: string;
+  grade?: string;
 }
 
 export interface Module {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLMS } from '../context/LMSContext';
-import { ClinicalLogEntry } from '../types';
+import { ClinicalLogEntry, Course, Lesson } from '../types';
 import {
   Stethoscope,
   Award,
@@ -15,12 +15,23 @@ import {
   Bookmark,
   Sparkles,
   Activity,
-  ChevronRight
+  ChevronRight,
+  PlayCircle
 } from 'lucide-react';
 
-export const DoctorDashboardView: React.FC = () => {
+interface DoctorDashboardViewProps {
+  onSelectCourse?: (course: Course) => void;
+  onStartLesson?: (course: Course, lesson: Lesson) => void;
+}
+
+export const DoctorDashboardView: React.FC<DoctorDashboardViewProps> = ({
+  onSelectCourse,
+  onStartLesson,
+}) => {
   const { user, updateProfile } = useAuth();
   const { courses } = useLMS();
+
+  const enrolledCourses = courses.filter((c) => user.enrolledCourseIds.includes(c.id));
 
   const [logs, setLogs] = useState<ClinicalLogEntry[]>(
     user.clinicalLogEntries || [
@@ -210,6 +221,45 @@ export const DoctorDashboardView: React.FC = () => {
                 <p className="font-semibold text-slate-200">FCPS Part-1 Medicine High-Yield Pathology Topics</p>
                 <p className="text-slate-400 text-[11px]">Glomerulonephritis vs Nephrotic Syndrome tables.</p>
               </div>
+            </div>
+          </div>
+
+          {/* Enrolled Courses for Doctor */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+            <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-emerald-400" /> My Enrolled Courses & CME
+            </h2>
+
+            <div className="space-y-3 text-xs">
+              {enrolledCourses.length > 0 ? (
+                enrolledCourses.map((c) => {
+                  const allLessons = c.modules.flatMap((m) => m.lessons);
+                  const nextLesson =
+                    allLessons.find((l) => !user.completedLessonIds.includes(l.id)) ||
+                    allLessons[0];
+
+                  return (
+                    <div key={c.id} className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                      <p className="font-bold text-white truncate">{c.title}</p>
+                      {nextLesson && (
+                        <p className="text-[11px] text-slate-400 truncate">Up Next: <span className="text-emerald-400 font-semibold">{nextLesson.title}</span></p>
+                      )}
+                      <div className="flex gap-2 pt-1">
+                        {nextLesson && onStartLesson && (
+                          <button
+                            onClick={() => onStartLesson(c, nextLesson)}
+                            className="w-full py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-1 shadow"
+                          >
+                            <PlayCircle className="w-3.5 h-3.5" /> Continue Course
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className="text-slate-500 text-center py-4">No enrolled courses.</p>
+              )}
             </div>
           </div>
         </div>
