@@ -9,6 +9,7 @@ interface LMSContextType {
   bookmarkedQuestionIds: string[];
   addCourse: (course: Course) => void;
   addExam: (exam: Exam) => void;
+  addQuestionToExam: (examId: string, question: Question) => void;
   saveSubmission: (submission: ExamSubmission) => void;
   toggleBookmarkQuestion: (questionId: string) => void;
   getSubmissionForExam: (examId: string) => ExamSubmission | undefined;
@@ -63,6 +64,20 @@ export const LMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setExams((prev) => [newExam, ...prev]);
   };
 
+  const addQuestionToExam = (examId: string, newQuestion: Question) => {
+    setExams((prev) =>
+      prev.map((e) => {
+        if (e.id === examId || (!examId && e.id === prev[0]?.id)) {
+          return {
+            ...e,
+            questions: [newQuestion, ...e.questions],
+          };
+        }
+        return e;
+      })
+    );
+  };
+
   const saveSubmission = (sub: ExamSubmission) => {
     setSubmissions((prev) => [sub, ...prev.filter((s) => s.id !== sub.id)]);
   };
@@ -94,6 +109,7 @@ export const LMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         bookmarkedQuestionIds,
         addCourse,
         addExam,
+        addQuestionToExam,
         saveSubmission,
         toggleBookmarkQuestion,
         getSubmissionForExam,

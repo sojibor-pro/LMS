@@ -1,24 +1,30 @@
 import React, { useState } from 'react';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { LMSProvider } from './context/LMSContext';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { PlanSelectorModal } from './components/PlanSelectorModal';
+import { RegisterModal } from './components/RegisterModal';
 import { ExamEngine } from './components/ExamEngine';
 import { HomeView } from './views/HomeView';
 import { CourseDetailView } from './views/CourseDetailView';
 import { StudyView } from './views/StudyView';
 import { ExamsView } from './views/ExamsView';
 import { DashboardView } from './views/DashboardView';
+import { DoctorDashboardView } from './views/DoctorDashboardView';
+import { InstructorDashboardView } from './views/InstructorDashboardView';
 import { AdminView } from './views/AdminView';
+import { QuestionBankView } from './views/QuestionBankView';
 import { Course, Lesson, Exam } from './types';
 
 function MainApp() {
+  const { user } = useAuth();
   const [currentTab, setCurrentTab] = useState<string>('home');
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const [activeExam, setActiveExam] = useState<Exam | null>(null);
   const [planModalOpen, setPlanModalOpen] = useState<boolean>(false);
+  const [registerModalOpen, setRegisterModalOpen] = useState<boolean>(false);
 
   const handleSelectCourse = (course: Course) => {
     setSelectedCourse(course);
@@ -48,6 +54,7 @@ function MainApp() {
               setSelectedLesson(null);
             }}
             onOpenPlanModal={() => setPlanModalOpen(true)}
+            onOpenRegisterModal={() => setRegisterModalOpen(true)}
           />
 
           <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -77,6 +84,10 @@ function MainApp() {
                   />
                 )}
 
+                {currentTab === 'qbank' && (
+                  <QuestionBankView onOpenPlanModal={() => setPlanModalOpen(true)} />
+                )}
+
                 {currentTab === 'exams' && (
                   <ExamsView
                     onStartExam={handleStartExam}
@@ -84,7 +95,14 @@ function MainApp() {
                   />
                 )}
 
-                {currentTab === 'dashboard' && <DashboardView />}
+                {currentTab === 'dashboard' && (
+                  <>
+                    {user.role === 'doctor' && <DoctorDashboardView />}
+                    {user.role === 'instructor' && <InstructorDashboardView />}
+                    {user.role === 'admin' && <AdminView />}
+                    {user.role === 'student' && <DashboardView />}
+                  </>
+                )}
 
                 {currentTab === 'admin' && <AdminView />}
               </>
@@ -97,6 +115,12 @@ function MainApp() {
           <PlanSelectorModal
             isOpen={planModalOpen}
             onClose={() => setPlanModalOpen(false)}
+          />
+
+          {/* User Registration Modal */}
+          <RegisterModal
+            isOpen={registerModalOpen}
+            onClose={() => setRegisterModalOpen(false)}
           />
         </>
       )}

@@ -1,4 +1,4 @@
-export type UserRole = 'student' | 'admin';
+export type UserRole = 'student' | 'doctor' | 'instructor' | 'admin';
 
 export type PlanType = 'free' | 'standard_batch' | 'premium_intensive' | 'genesis_pro';
 
@@ -11,6 +11,15 @@ export interface Plan {
   features: string[];
   popular?: boolean;
   color: string;
+}
+
+export interface ClinicalLogEntry {
+  id: string;
+  patientCaseTitle: string;
+  specialty: string;
+  date: string;
+  diagnosisNotes: string;
+  status: 'Completed' | 'Under Review' | 'Verified';
 }
 
 export interface User {
@@ -27,6 +36,27 @@ export interface User {
   completedLessonIds: string[];
   studyStreakDays: number;
   totalStudyHours: number;
+  
+  // Doctor specific fields
+  bmdcRegNumber?: string;
+  hospitalAffiliation?: string;
+  cmeCredits?: number;
+  clinicalLogEntries?: ClinicalLogEntry[];
+
+  // Authentication & Security Verification
+  isEmailVerified?: boolean;
+  isPhoneVerified?: boolean;
+  jwtToken?: string;
+  refreshToken?: string;
+  tokenExpiresAt?: string;
+  
+  // Instructor specific fields
+  bio?: string;
+  specialization?: string;
+  createdCourseIds?: string[];
+  totalStudentsTaught?: number;
+  totalRevenueBDT?: number;
+  instructorRating?: number;
 }
 
 export interface LectureSheet {
@@ -60,10 +90,12 @@ export interface Course {
   category: 'Medical FCPS/Residency' | 'Basic Science' | 'BCS Health' | 'General Medical' | 'Clinical Skills';
   description: string;
   thumbnail: string;
+  instructorId?: string;
   instructorName: string;
   instructorTitle: string;
   instructorAvatar: string;
   requiredPlan: PlanType;
+  priceBDT?: number;
   totalEnrolled: number;
   rating: number;
   modules: Module[];
@@ -71,20 +103,33 @@ export interface Course {
   durationTotal: string;
   totalMcqs: number;
   isFeatured?: boolean;
+  isApproved?: boolean;
 }
 
 export type QuestionType = 'sba' | 'true_false' | 'mcq';
 
 export interface Question {
   id: string;
-  text: string; // Main question stem
+  text: string; // Question stem
   type: QuestionType;
-  options: string[]; // For SBA/MCQ: 4 options. For true_false: 5 stems/statements
-  correctAnswer: number | boolean[]; // For SBA/MCQ: index (0-3). For true_false: array of 5 booleans [true, false, true, false, true]
-  explanation: string;
-  topic: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  referenceBook?: string;
+  options: string[]; // Options (For SBA/MCQ: 4-5 options. For true_false: 5 stems/statements)
+  correctAnswer: number | boolean[]; // Correct Answer (For SBA/MCQ: index. For true_false: array of 5 booleans)
+  explanation: string; // Explanation
+  referenceBook?: string; // Reference (e.g., Davidson Medicine 24th Ed p. 412)
+  difficulty: 'Easy' | 'Medium' | 'Hard'; // Difficulty
+  image?: string; // Image (Diagram/ECG/Clinical photo URL)
+  tags?: string[]; // Tags (e.g., ['FCPS-Part1', 'ECG', 'Medicine', 'HighYield'])
+  previousExam?: string; // Previous Exam (e.g., "FCPS Part-1 July 2024", "BSMMU Residency Jan 2023")
+  author?: string; // Author (e.g., "Dr. Shahriar Rahman, FCPS", "Genesis Academic Board")
+  status?: 'Published' | 'Draft' | 'In Review' | 'Archived'; // Status
+
+  // 6-Level FCPS Question Bank Taxonomy:
+  // Faculty -> Subject -> Module -> Chapter -> Topic -> Question
+  faculty?: string;     // e.g. "Faculty of Medicine & Allied", "Faculty of Surgery & Allied"
+  subject?: string;     // e.g. "Internal Medicine", "Physiology", "Pathology"
+  moduleName?: string;  // e.g. "Cardiovascular System", "Renal Physiology"
+  chapter?: string;     // e.g. "Ischemic Heart Disease & Heart Failure", "Acid-Base Balance"
+  topic: string;        // e.g. "JVP Waves & Cardiac Cycle"
 }
 
 export interface Exam {
@@ -93,6 +138,7 @@ export interface Exam {
   description: string;
   courseId?: string;
   category: string;
+  mode?: 'practice' | 'exam'; // Practice Mode (instant explanation) vs Exam Mode (timed + test rules)
   durationMinutes: number;
   totalMarks: number;
   negativeMarkPerWrong: number; // e.g. 0.25 or 0.5
@@ -103,6 +149,10 @@ export interface Exam {
   scheduledTime?: string;
   totalAttempts?: number;
   averageScore?: number;
+  subject?: string;
+  topic?: string;
+  isCustom?: boolean;
+  isPreviousYear?: boolean;
 }
 
 export interface StudentAnswer {
@@ -127,6 +177,8 @@ export interface ExamSubmission {
   answers: Record<string, StudentAnswer>; // questionId -> answer
   rankInBatch?: number;
   totalCandidates?: number;
+  percentile?: number; // e.g. 96.4th percentile
+  mode?: 'practice' | 'exam';
 }
 
 export interface SubjectAnalytics {
