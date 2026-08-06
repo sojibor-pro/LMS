@@ -1,0 +1,6 @@
+{
+  "name": "Genesis LMS - Learning & Medical Exam Platform",
+  "description": "Comprehensive Learning Management System inspired by Genesis & Udemy, featuring course plans, video lessons, topic lecture notes, interactive exam engine with timers & explanations, AI question set generator, student dashboard, performance analytics, and administrative management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
